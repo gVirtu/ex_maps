@@ -7,6 +7,7 @@ defmodule GoogleMaps.Request do
   @spec get(String.t, keyword()) :: GoogleMaps.Response.t
   def get(endpoint, params) do
     {secure, params} = Keyword.pop(params, :secure)
+    {resource, params} = Keyword.pop(params, :resource, "json")
     {key, params} = Keyword.pop(params, :key, api_key())
     {headers, params} = Keyword.pop(params, :headers, [])
     {options, params} = Keyword.pop(params, :options, [])
@@ -20,7 +21,7 @@ defmodule GoogleMaps.Request do
       |> Enum.map(&transform_param/1)
       |> URI.encode_query()
 
-    url = "https://maps.googleapis.com/maps/api/#{endpoint}/json"
+    url = "https://maps.googleapis.com/maps/api/#{endpoint}/#{resource}"
 
     requester().get("#{url}?#{query}", headers, options)
   end
